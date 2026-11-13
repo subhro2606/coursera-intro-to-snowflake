@@ -1,0 +1,4 @@
+# Snowflake Workspaces (managed) - per-user Notebook settings
+.snowflake/settings.json
+.snowflake/.folder
+*.sql
