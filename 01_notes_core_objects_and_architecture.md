@@ -1,5 +1,6 @@
 [Github repo](https://github.com/Snowflake-Labs/sf-samples/tree/main/samples/intro-to-snowflake-for-devs-data-scientists-data-engineers)
 
+# Snowflake Core Objects and Architecture
 
 ## Virtual Resources
 A cluster of compute resources.
@@ -133,3 +134,5 @@ The compute layer described in the video centers on virtual warehouses. Snowpark
 ### Hybrid Tables
 
 Standard Snowflake tables are optimized for analytical workloads. Snowflake has introduced Hybrid Tables to support transactional workloads within the same platform. Hybrid Tables support primary key enforcement, unique constraints, indexes for fast row-level lookups, and row-level locking. This allows applications requiring both transactional and analytical capabilities to use a single platform rather than maintaining separate systems for each workload type.
+
+
