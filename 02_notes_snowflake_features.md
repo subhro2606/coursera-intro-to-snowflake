@@ -95,6 +95,15 @@ A common pattern in current Snowflake usage is cloning a shared database obtaine
 - Python UDFs require specifying `LANGUAGE PYTHON`, `RUNTIME_VERSION`, and a `HANDLER` function name.
 - UDFs are great for encapsulating reusable business logic that can be shared across queries.
 
+
+### Snowpark as the recommended Python UDF development pattern
+
+The video demonstrates Python UDFs written as inline strings within a SQL statement. This remains functional but is no longer the recommended approach. The current best practice is to develop Python UDFs using Snowpark in a structured Python environment, like a Snowflake Notebook, a local IDE, or a CI/CD pipeline, where code completion, local testing, and package management are available. Deployment via Snowpark allows Python functions to be referenced directly without embedding them as strings in SQL, which improves maintainability.
+
+### Supported Python runtime versions
+
+Snowflake currently supports Python 3.9, 3.10, 3.11, and 3.12 for UDFs. Support for Python 3.8 has been deprecated. The runtime version should be specified explicitly using the RUNTIME_VERSION parameter when creating a Python UDF.
+
 ## Section: Stored Procedures
 **Stored procedures** can perform DDL/DML operations (CREATE, INSERT, UPDATE, DELETE) — unlike UDFs which are read-only.
 - Procedures are called with `CALL procedure_name(args)`.
