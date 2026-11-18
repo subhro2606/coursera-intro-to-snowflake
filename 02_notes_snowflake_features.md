@@ -58,3 +58,47 @@ Snowflake allows an addional 7 day FAIL_SAFE after the retention period is over,
 Transient and temporary tables cost less storage because they skip Fail-safe.
 
 You cannot set `DATA_RETENTION_TIME_IN_DAYS` higher than 1 for transient or temporary tables.
+
+
+
+## Cloning and Resource Monitors
+### Cloning 
+`CLONE` creates a zero-copy clone — it's instant and doesn't duplicate storage until data diverges.
+- You can clone databases, schemas, and tables.
+- Clones are independent: changes to the clone don't affect the original, and vice versa.
+- Cloning is great for creating dev/test environments from production data without extra cost.
+- Combine with Time Travel: `CLONE ... AT(TIMESTAMP => ...)` to clone historical data.
+
+### Resource monitors
+**Resource monitors** track and control credit usage for warehouses.
+- Set `CREDIT_QUOTA` to define the monthly credit limit.
+- Use triggers at different thresholds: `NOTIFY` (alert only), `SUSPEND` (stop new queries), `SUSPEND_IMMEDIATELY` (kill running queries).
+- Resource monitors can be assigned to one or more warehouses, or to the entire account.
+- Only `ACCOUNTADMIN` can create resource monitors by default.
+- They reset at the start of each billing cycle (or custom frequency).
+
+### Expanded list of cloneable objects
+
+The video covers cloning tables, schemas, and databases. The set of objects that support cloning has expanded. Tasks and Streams can now be cloned, which is particularly relevant for data engineering workflows. Cloning a schema that contains tables, streams, and tasks creates an isolated copy of an entire data pipeline for testing or development purposes without affecting the production environment.
+
+### Cloning Marketplace shared databases
+
+A common pattern in current Snowflake usage is cloning a shared database obtained from the Snowflake Marketplace. Marketplace datasets are delivered as shared databases, which are read-only by design. To enrich a Marketplace dataset, join it persistently with internal data, or apply custom transformations, the shared database can be cloned to create a local editable copy. The clone is zero-copy at the moment of creation. Changes to the Marketplace source after cloning are not automatically reflected in the cloned copy, and the two will diverge independently from the point of cloning.
+
+
+## User Defined Functions (UDFs) and User Defined Table Functions(UDTFs)
+**UDFs** (User Defined Functions) return a single scalar value per row. **UDTFs** (User Defined Table Functions) return a table.
+- UDFs can be written in SQL, JavaScript, Python, or Java.
+- Call a scalar UDF in a `SELECT`: `SELECT my_function(column)`.
+- Call a UDTF with `TABLE()`: `SELECT * FROM TABLE(my_udtf(args))`.
+- Use `CREATE OR REPLACE FUNCTION` to avoid "already exists" errors on re-runs.
+- Python UDFs require specifying `LANGUAGE PYTHON`, `RUNTIME_VERSION`, and a `HANDLER` function name.
+- UDFs are great for encapsulating reusable business logic that can be shared across queries.
+
+## Section: Stored Procedures
+**Stored procedures** can perform DDL/DML operations (CREATE, INSERT, UPDATE, DELETE) — unlike UDFs which are read-only.
+- Procedures are called with `CALL procedure_name(args)`.
+- They can be written in SQL (Snowflake Scripting), JavaScript, Python, or Java.
+- Use procedures for administrative tasks, data transformations, or complex multi-step workflows.
+- Procedures can run with the caller's rights (`EXECUTE AS CALLER`) or the owner's rights (`EXECUTE AS OWNER`).
+- Unlike UDFs, stored procedures cannot be used inside a `SELECT` statement.
