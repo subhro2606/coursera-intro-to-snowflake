@@ -177,3 +177,36 @@ df = session.table("TASTY_BYTES_SAMPLE_DATA.raw_pos.menu")
 # Filter for a specific truck brand and display results
 df.filter(col("TRUCK_BRAND_NAME") == "Freezing Point").show()
 ```
+
+
+
+## Snowpark CLI
+The **Snowflake CLI** (`snow`) lets you interact with Snowflake from your terminal — manage connections, deploy functions, and run queries.
+- Install with `pip install snowflake-cli`.
+- Use `snow connection add` to store connection profiles and `snow connection test` to verify them.
+- The CLI is useful for CI/CD pipelines, automation scripts, and developers who prefer terminal workflows.
+
+## This code should be run in your local terminal or shell, not a Snowflake Notebook
+#### - Install the Snowflake CLI
+pip install snowflake-cli
+#### -For installing with uv use
+uv tool install --python 3.12 snowflake-cli
+
+
+#### - Confirm the install worked
+snow --version
+
+#### - Add a new connection
+snow connection add
+
+#### - Test the connection
+snow connection test --connection dev
+
+#### - List all saved connections
+snow connection list
+
+**Tips:**
+- `snow connection add` walks you through an interactive setup — have your account identifier, username, and role ready.
+- Connection names (like `dev`) let you manage multiple environments (dev, staging, prod) easily.
+- If `snow --version` fails, ensure your Python environment's bin/Scripts directory is in your PATH.
+- connection is stored in `C:\Users\subhr\.snowflake\connections.toml`
