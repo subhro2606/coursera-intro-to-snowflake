@@ -111,3 +111,69 @@ Snowflake currently supports Python 3.9, 3.10, 3.11, and 3.12 for UDFs. Support 
 - Use procedures for administrative tasks, data transformations, or complex multi-step workflows.
 - Procedures can run with the caller's rights (`EXECUTE AS CALLER`) or the owner's rights (`EXECUTE AS OWNER`).
 - Unlike UDFs, stored procedures cannot be used inside a `SELECT` statement.
+
+
+## Role-based Access Control
+**RBAC** (Role-Based Access Control) is Snowflake's security model — all permissions are granted to roles, and roles are granted to users.
+- Use `CREATE ROLE` to define a new role. Use `GRANT` to assign privileges to that role.
+- The built-in role hierarchy: `ACCOUNTADMIN` > `SECURITYADMIN` > `USERADMIN` > `SYSADMIN` > `PUBLIC`.
+- `SHOW GRANTS TO ROLE role_name` reveals what privileges a role currently holds.
+- `SHOW GRANTS TO user user_name` reveals what privileges a user currently holds.
+- A user must be granted a role before they can `USE ROLE role_name`.
+- Follow the principle of least privilege — grant only the permissions needed for each role's function.
+- Use `GRANT ROLE child_role TO ROLE parent_role` to build custom role hierarchies.
+
+
+## Snowpark Dataframes and VsCode Extensions
+
+### Snowpark Dataframes
+- **Snowpark** lets you write Python (or Scala/Java) that executes inside Snowflake — data never leaves the platform.
+- A `DataFrame` is a lazy reference to a table or query; operations are not executed until you call `.show()`, `.collect()`, or `.count()`.
+- Use `session.table("db.schema.table")` to create a DataFrame from an existing table.
+- Chain `.filter()`, `.select()`, `.group_by()`, and `.agg()` for transformations — similar to PySpark or pandas.
+- `session.sql("SELECT ...")` returns a DataFrame from raw SQL if you prefer writing SQL directly.
+- In Snowflake Notebooks, use `get_active_session()` instead of building a session manually with credentials.
+
+
+
+### Snowpark DataFrames - Run Locally
+This code can only be run locally after performing the install with the above command in your local terminal or shell
+**Tips:**
+- When connecting from a local environment, you need a `Session` object configured with your account, user, password, role, warehouse, database, and schema.
+- Keep credentials in a separate file (e.g., `credential.py`) and add it to `.gitignore` to avoid committing secrets.
+- The VS Code Snowflake extension provides IntelliSense, syntax highlighting, and the ability to run queries directly from the editor.
+
+#### Shell Install Command For Snowpark Python Library
+
+
+`pip install snowflake-snowpark-python`
+
+**Tip:** This install is only needed when running Snowpark outside of Snowflake (e.g., in a local IDE). In Snowflake Notebooks, Snowpark is pre-installed and ready to use.
+
+
+```
+# Import the Snowpark Session class for connecting to Snowflake
+from snowflake.snowpark import Session
+import os
+
+# Connection parameters – same pattern as above
+# In production, use secrets management rather than environment variables
+connection_params = {
+    "account": os.environ["SNOWFLAKE_ACCOUNT"],
+    "user": os.environ["SNOWFLAKE_USER"],
+    "password": os.environ["SNOWFLAKE_PASSWORD"],
+    "role": "SYSADMIN",
+    "warehouse": "COMPUTE_WH",
+    "database": "FROSTBYTE_TASTY_BYTES",
+    "schema": "RAW_POS"
+}
+
+# Establish the Snowpark session
+session = Session.builder.configs(connection_params).create()
+
+# Reference the menu table as a Snowpark DataFrame
+df = session.table("TASTY_BYTES_SAMPLE_DATA.raw_pos.menu")
+
+# Filter for a specific truck brand and display results
+df.filter(col("TRUCK_BRAND_NAME") == "Freezing Point").show()
+```
