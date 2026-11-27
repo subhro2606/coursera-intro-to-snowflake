@@ -82,3 +82,26 @@ The videos cover `AI_COMPLETE, AI_SENTIMENT, AI_TRANSLATE, and AI_EXTRACT`. The 
 The videos use the SUMMARIZE function in a key demonstration. SUMMARIZE is deprecated and will eventually be removed. The recommended replacement is to use AI_COMPLETE with an explicit summarization instruction in the prompt:
 
 
+
+# Snowflake Apps
+
+## Cortex functions in application backends
+
+The video covers connecting applications to Snowflake through drivers and connectors to execute SQL queries. Now, a common pattern in application development is to embed Cortex AI functions within that same backend logic. An application backend that connects to Snowflake via the Python connector can call AI_COMPLETE, Cortex Search, or Cortex Analyst as part of its query execution, returning AI-enhanced results to the application's frontend without requiring separate AI infrastructure. Because Cortex functions execute within Snowflake's governed environment, the same access controls and data policies that apply to standard queries apply to AI-enabled queries. Cortex functions are covered in detail in the remaining videos of this module.
+
+## Hybrid Tables
+
+Hybrid Tables have matured significantly since the video was recorded. Primary key and unique constraints are now enforced, indexes are supported for fast single-row lookups, and the operational characteristics for transactional workloads are more clearly documented. Hybrid Tables are appropriate for applications requiring concurrent read and write operations on individual rows alongside analytical queries against the same data, eliminating the need to maintain separate transactional and analytical database systems.
+
+## The Snowflake REST API
+
+The video references the Snowflake Python API for programmatic object management. Snowflake also provides a REST API for executing SQL and managing resources. The REST API is appropriate for integration scenarios where installing a full driver or connector is not practical, including serverless functions, lightweight webhook-driven automations, or environments with restricted dependency management.
+
+
+# Applications with Snowflake
+**Streamlit in Snowflake (SiS)** lets you build interactive data apps directly in Snowsight — no separate hosting needed.
+- Create a Streamlit app from the Snowsight UI: Projects > Streamlit > + Streamlit App.
+- Your app runs inside Snowflake, so it has direct access to your data with full governance and security.
+- Common components: `st.dataframe()` for tables, `st.bar_chart()` for charts, `st.selectbox()` for filters, `st.text_input()` for user input.
+- Use `get_active_session()` inside your Streamlit app to query Snowflake data.
+- Apps can be shared with other Snowflake users via role-based access.
